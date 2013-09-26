@@ -4,7 +4,7 @@ tasks:
         help: "Connect to the remote SSH"
         set:
             env: ?
-            cmd: ? "bash"
+            cmd: ? "bash --login"
             interactive: 1
         do: ssh -tq $(env.ssh) "cd $(env.root); $(cmd)"
 
