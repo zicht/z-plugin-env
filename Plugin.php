@@ -89,21 +89,34 @@ class Plugin extends BasePlugin
                 }else{
                     // none given set port to non privileged port < 1024
                     $localPort  = $container->resolve('port_remote') + 2000;
+                }
 
-                    if(!$container->has('explain')){
+                // check if port is used else check next one
+                while ($self->checkLocalPort($localPort, $container) === false){
+                    // Some debug info
+                    if($container->has('verbose')){
                         $container->output->writeln(
                             sprintf(
-                                "Binding remote port <comment>%s</comment> to local port to <comment>%s</comment> on <comment>%s</comment>",
-                                $remotePort,
-                                $localPort,
-                                $host
+                                "Port %s is used by system, trying next one",
+                                $localPort
                             )
                         );
                     }
-                }
-                // check if port is used else check next one
-                while ($self->checkLocalPort($localPort, $container) === false){
+
                     $localPort++;
+
+                }
+                // Some info
+                if(!$container->has('explain')){
+                    $container->output->writeln(
+                        sprintf(
+                            "Forwarding  %s:%s => %s:%s",
+                            $host,
+                            $remotePort,
+                            trim(`hostname`),
+                            $localPort
+                        )
+                    );
                 }
 
                 $bindParam .= sprintf('-L %s:%s:%s ', $localPort, $host, $remotePort);
@@ -179,11 +192,24 @@ class Plugin extends BasePlugin
                                 )
                             );
                         }
-
                     }
                 }
 
                 foreach(array_keys($remotePorts) as $id){
+
+                    // Some info
+                    if(!$container->has('explain')){
+                        $container->output->writeln(
+                            sprintf(
+                                "Forwarding  %s:%s => %s:%s",
+                                $hosts[$id],
+                                $remotePorts[$id],
+                                trim(`hostname`),
+                                $localPorts[$id]
+                            )
+                        );
+                    }
+
                     $bindParam .= sprintf('-L %s:%s:%s ', $localPorts[$id], $hosts[$id], $remotePorts[$id]);
                 }
             }

@@ -41,7 +41,7 @@ tasks:
             host: ? "localhost"
             cmd: ? "bash --login"
             interactive: 1
-        do: ssh -tq $(env.portforward) $(env.ssh) "cd $(env.root); $(cmd)"
+        do: ssh -tqg $(env.portforward) $(env.ssh) "cd $(env.root); $(cmd)"
 
     # Connect to the remote mysql shell using ssh
     env.mysql:
