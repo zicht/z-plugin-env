@@ -210,7 +210,7 @@ class Plugin extends BasePlugin
      * @return bool
      * @throws \UnexpectedValueException
      */
-    private function checkLocalPort($port, Container $container){
+    public function checkLocalPort($port, Container $container){
 
         $return = false;
         $cmd    = sprintf(
@@ -270,7 +270,7 @@ class Plugin extends BasePlugin
      * @return array
      * @throws \UnexpectedValueException
      */
-    private function processPortString($ports){
+    public function processPortString($ports){
 
         $ports = explode(',', $ports);
 
