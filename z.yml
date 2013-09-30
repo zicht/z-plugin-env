@@ -8,6 +8,42 @@ tasks:
             interactive: 1
         do: ssh -tq $(env.ssh) "cd $(env.root); $(cmd)"
 
+    # Connect to the remote shell using ssh and setup port forward
+    env.ssh.portforward:
+        unless: !env.ssh.connectable
+        help: |
+          Connect to the remote SSH and sets up portforward(s)
+
+          The port forward can be called ether by giving remote port (and localport &
+          host are optional) as argument(s) or defined as followed in the z.yml file.
+
+          Single port forward config:
+
+          <bg=yellow>
+          portforward:
+              remote: 80
+              host: localhost
+              local: 8080
+          </bg=yellow>
+
+          Multiple port forwards config (use comma AND space for delimiter):
+
+          <bg=yellow>
+          portforward:
+              remote: 80, 90
+              host: localhost, 192.168.1.1
+              local: 8080, 9090
+          </bg=yellow>
+
+        set:
+            env: ?
+            port_remote: ? ""
+            port_local: ? ""
+            host: ? "localhost"
+            cmd: ? "bash --login"
+            interactive: 1
+        do: ssh -tq $(env.portforward) $(env.ssh) "cd $(env.root); $(cmd)"
+
     # Connect to the remote mysql shell using ssh
     env.mysql:
         unless: !env.ssh.connectable
