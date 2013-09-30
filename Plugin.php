@@ -251,7 +251,7 @@ class Plugin extends BasePlugin
 
             $container->output->writeln(
                 sprintf(
-                    '( %s );',
+                    '( [[ -n $( %s ) ]] && exit; );',
                     rtrim(
                         trim($cmd),
                         "\n"
