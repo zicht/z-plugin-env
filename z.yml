@@ -10,7 +10,6 @@ tasks:
 
     # Connect to the remote shell using ssh and setup port forward
     env.ssh.portforward:
-        unless: !env.ssh.connectable
         help: |
           Connect to the remote SSH and sets up portforward(s)
 
