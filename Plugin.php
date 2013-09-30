@@ -68,7 +68,9 @@ class Plugin extends BasePlugin
             return shell_exec(sprintf('ssh -oBatchMode=yes %s "echo 1" 2>/dev/null;', $container->resolve('env.ssh')));
         });
 
-        $container->decl('env.portforward', function(Container $container) {
+        $self = $this;
+
+        $container->decl('env.portforward', function(Container $container) use ($self) {
 
 
             $bindParam     = null;
@@ -100,7 +102,7 @@ class Plugin extends BasePlugin
                     }
                 }
                 // check if port is used else check next one
-                while ($this->checkLocalPort($localPort, $container) === false){
+                while ($self->checkLocalPort($localPort, $container) === false){
                     $localPort++;
                 }
 
@@ -109,11 +111,11 @@ class Plugin extends BasePlugin
             }else{
 
                 if ($container->has('portforward.remote')) {
-                    $remotePorts = $this->processPortString($container->resolve('portforward.remote'));
+                    $remotePorts = $self->processPortString($container->resolve('portforward.remote'));
                 }
 
                 if ($container->has('portforward.local')) {
-                    $localPorts = $this->processPortString($container->resolve('portforward.local'));
+                    $localPorts = $self->processPortString($container->resolve('portforward.local'));
 
                     if(count($localPorts) !== count($remotePorts)){
                         throw new \InvalidArgumentException('Defined local and remote ports does not match, check settings');
@@ -128,7 +130,7 @@ class Plugin extends BasePlugin
                         // and check if port is used else check next one
                         $localPort = $remotePort + 2000;
 
-                        while ($this->checkLocalPort($localPort, $container) === false){
+                        while ($self->checkLocalPort($localPort, $container) === false){
                             $localPort++;
                         }
 
@@ -169,7 +171,7 @@ class Plugin extends BasePlugin
 
                         }
 
-                        if($this->checkLocalPort($localPort, $container) === false){
+                        if($self->checkLocalPort($localPort, $container) === false){
                             throw new \Symfony\Component\Process\Exception\RuntimeException(
                                 sprintf(
                                     'System already listening to port %s, try using a different port',
