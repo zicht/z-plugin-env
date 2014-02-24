@@ -89,3 +89,15 @@ tasks:
             version: ?vcs.current
         do:
             - $(vcs.diff(env.versionat(env.ssh, 0), vcs.current, verbose))
+
+    env.cat:
+        help: |
+            Cat a file from the remove environment.
+
+            For example: 
+                z env:cat staging composer.lock
+        set:
+            env: ?
+            file: ?
+        do:
+            - ssh $(env.ssh) "cat $(env.root)/$(file)"
