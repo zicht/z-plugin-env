@@ -54,7 +54,7 @@ tasks:
         set:
             env: ?
             interactive: 1
-        do: ssh -tq $(env.ssh) "mysql $(env.db)"
+        do: ssh -tq $(env.ssh) "mysql $(env.db_defaults_file) $(env.db)"
 
     # Initialize the SSH session by copying a local public key to the remote machine
     env.ssh.init:
