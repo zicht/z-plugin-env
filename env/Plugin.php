@@ -62,7 +62,6 @@ class Plugin extends BasePlugin
             $envSsh = $container->resolve(array('envs', $env, 'ssh'), true);
             return sprintf('ssh ' . $envSsh . ' -tq "' . $container->resolve('SHELL') . '"');
         });
-//        var_dump($container->call($container->get(array('env', 'ssh'))));
         $container->method(
             array('env', 'versionat'),
             function($container, $env, $verbose = false) {
