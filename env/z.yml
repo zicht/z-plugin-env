@@ -13,8 +13,8 @@ tasks:
         args:
             target_env: ?
             cmd: ? "bash --login"
-            interactive: 1
-        do: ssh -tq $(envs[target_env].ssh) "cd $(envs[target_env].root); $(cmd)"
+        do:
+            - @(with true as INTERACTIVE) ssh -tq $(envs[target_env].ssh) "cd $(envs[target_env].root); $(cmd)"
 
     # Connect to the remote mysql shell using ssh
     env.mysql:
@@ -26,8 +26,8 @@ tasks:
             Configure the remote ~/.my.cnf if this is not the case.
         args:
             target_env: ?
-            interactive: 1
-        do: ssh -tq $(envs[target_env].ssh) "mysql $(envs[target_env].db)"
+        do:
+            - @(with true as INTERACTIVE) ssh -tq $(envs[target_env].ssh) "mysql $(envs[target_env].db)"
 
     # Initialize the SSH session by copying a local public key to the remote machine
     env.ssh-copy-id:
@@ -39,8 +39,8 @@ tasks:
             already is connectable
         args:
             target_env: ?
-            interactive: 1
-        do: ssh-copy-id $(envs[target_env].ssh)
+        do:
+            - @(with true as INTERACTIVE) ssh-copy-id $(envs[target_env].ssh)
 
     # Show the deployed version of the remote machine
     env.version:
@@ -63,3 +63,4 @@ tasks:
             version: ? vcs.current
         do: |
             $(vcs.diff(env.versionat(target_env), version, VERBOSE))
+
