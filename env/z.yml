@@ -64,3 +64,24 @@ tasks:
         do: |
             $(vcs.diff(env.versionat(target_env), version, VERBOSE))
 
+    env.get:
+        help: |
+            Copy file(s) from remote environment
+        flags:
+            recursive: false
+        args:
+            target_env: ?
+            file: ?
+        do: |
+            scp $(recursive ? "-R") $(envs[target_env].ssh):$(envs[target_env].root)$(file) ./$(file)
+
+    env.put:
+        help: |
+            Copy remote files to remote environment
+        flags:
+            recursive: false
+        args:
+            target_env: ?
+            file: ?
+        do:
+            - scp $(recursive ? "-R") ./$(file) $(envs[target_env].ssh):$(envs[target_env].root)$(file)
