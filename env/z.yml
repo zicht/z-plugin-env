@@ -77,7 +77,7 @@ tasks:
 
     env.put:
         help: |
-            Copy remote files to remote environment
+            Copy files to remote environment
         flags:
             recursive: false
         args:
