@@ -85,3 +85,15 @@ tasks:
             file: ?
         do:
             - scp $(recursive ? "-R") ./$(file) $(envs[target_env].ssh):$(envs[target_env].root)$(file)
+
+    env.port-forward:
+        help: |
+            Do a port forward to a remote env
+        args:
+            target_env: ?
+            remote: ?
+            local: ? remote
+        opts:
+            localhost: '"localhost"'
+        do:
+            - @(with true as INTERACTIVE) ssh -t -L $(remote):$(localhost):$(local) $(envs[target_env].ssh)  
