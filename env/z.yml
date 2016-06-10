@@ -64,6 +64,20 @@ tasks:
         do: |
             $(vcs.diff(env.versionat(target_env), version, VERBOSE))
 
+    env.fdiff:
+        help: |
+            Compare the physical file in the build dir on disk with a remote physical file.
+
+            You can pass the --prefix="." to use your local working tree as the base for comparison
+        args:
+            target_env: ?
+            path: ?
+        opts:
+            prefix: build.dir
+
+        do: |
+            ssh $(envs[target_env].ssh) "cat $(envs[target_env].root)$(path)" | diff $(prefix)/$(path) -
+
     env.get:
         help: |
             Copy file(s) from remote environment
