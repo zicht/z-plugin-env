@@ -76,7 +76,7 @@ tasks:
             prefix: build.dir
 
         do: |
-            ssh $(envs[target_env].ssh) "cat $(envs[target_env].root)$(path)" | diff $(prefix)/$(path) -
+            ssh $(envs[target_env].ssh) "cat $(envs[target_env].root)$(path)" | diff $(prefix)/$(path) - || true
 
     env.get:
         help: |
