@@ -10,15 +10,18 @@ tasks:
     # Connect to the remote shell using ssh
     env.ssh:
         help: "Connect to the remote SSH"
+        flags:
+            tty: true
         args:
             target_env: ?
             cmd: ? "bash --login"
         do:
-            - @(with true as INTERACTIVE) ssh -tq $(envs[target_env].ssh) "cd $(envs[target_env].root); $(cmd)"
+            - @(with tty as INTERACTIVE) ssh -$(tty ? "t")q $(envs[target_env].ssh) "cd $(envs[target_env].root); $(cmd)"
 
     # Connect to the remote mysql shell using ssh
     env.mysql:
         unless: !ssh.connectable(envs[target_env].ssh)
+        
         help: |
             Connect to the remote MySQL.
 
