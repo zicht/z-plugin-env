@@ -113,3 +113,14 @@ tasks:
             localhost: '"localhost"'
         do:
             - @(with true as INTERACTIVE) ssh -t -L $(remote):$(localhost):$(local) $(envs[target_env].ssh)  
+
+    env.doctrine:
+        unless: !confirm(sprintf("You are <comment>%s</comment> the Doctrine schema on environment <comment>%s</comment>, are you sure?", dump ? "outputing" : "updating", target_env)) || !ssh.connectable(envs[target_env].ssh)
+        help: |
+            Update or dump the Doctrine schema on the enviroment
+        args:
+            target_env: ?
+        flags:
+            dump: false
+        do:
+            - ssh $(envs[target_env].ssh) "cd $(envs[target_env].root) && php app/console doctrine:schema:update --$(dump ? "dump-sql":"force") --env=$(target_env)"
