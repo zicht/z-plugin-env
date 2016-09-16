@@ -50,8 +50,10 @@ tasks:
             Downloads the remote revision file and shows which version is specified in it.
         args:
             target_env: ?
-        do:
-            - echo "$(env.versionat(target_env, VERBOSE))"
+        flags:
+            tags: false
+        do: |
+            $(tags ? "git lg -n 10" : "echo") "$(env.versionat(target_env, VERBOSE))"
 
     env.diff:
         help: |
