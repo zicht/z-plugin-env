@@ -51,9 +51,9 @@ tasks:
         args:
             target_env: ?
         flags:
-            tags: false
+            log: false
         do: |
-            $(tags ? "git lg -n 10" : "echo") "$(env.versionat(target_env, VERBOSE))"
+            $(log ? "git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %Cblue[%an]%Creset' --abbrev-commit --date=relative -n 10" : "echo") "$(env.versionat(target_env, VERBOSE))"
 
     env.diff:
         help: |
