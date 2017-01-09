@@ -5,12 +5,10 @@
         "php": ">=5.3.3"
     },
     "scripts": {
-        "post-install-cmd": [
-        ],
-        "post-update-cmd": [
-        ]
+        "post-install-cmd": [],
+        "post-update-cmd": []
     },
     "minimum-stability": "dev",
-    "extra": {
-    }
+    "extra": [],
+    "license": "MIT"
 }
