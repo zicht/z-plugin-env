@@ -88,5 +88,5 @@ information on how to leverage this.
 
 
 # Maintainer(s)
-* Gerard van Helden <gerard@zicht.nl>
+* Oskar van Velden <oskar@zicht.nl>
 
