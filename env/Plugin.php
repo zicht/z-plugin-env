@@ -47,6 +47,7 @@ class Plugin extends BasePlugin
                             ->scalarNode('web')->end()
                             ->scalarNode('url')->end()
                             ->scalarNode('db')->end()
+                            ->scalarNode('host')->end()
                             ->scalarNode('db_defaults_file')
                                 ->defaultValue(null)
                                 ->beforeNormalization()
