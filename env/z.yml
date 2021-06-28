@@ -90,7 +90,7 @@ tasks:
             target_env: ?
             file: ?
         do: |
-            scp -P $(envs[target_env].ssh_port) $(recursive ? "-R") $(envs[target_env].ssh):$(envs[target_env].root)$(file) ./$(file)
+            scp -P $(envs[target_env].ssh_port) $(recursive ? "-r") $(envs[target_env].ssh):$(envs[target_env].root)$(file) ./$(file)
 
     env.put:
         help: |
@@ -101,7 +101,7 @@ tasks:
             target_env: ?
             file: ?
         do:
-            - scp -P $(envs[target_env].ssh_port) $(recursive ? "-R") ./$(file) $(envs[target_env].ssh):$(envs[target_env].root)$(file)
+            - scp -P $(envs[target_env].ssh_port) $(recursive ? "-r") ./$(file) $(envs[target_env].ssh):$(envs[target_env].root)$(file)
 
     env.port-forward:
         help: |
