@@ -79,24 +79,18 @@ class Plugin extends BasePlugin
                 static $envVcsInfo = array();
 
                 if (!isset($envVcsInfo[$env])) {
-                    $tmp = tempnam(sys_get_temp_dir(), 'z');
-                    $cmd = sprintf(
-                        'scp %s:%s/%s %s',
-                        $container->resolve(array('envs', $env, 'ssh'), true),
-                        $container->resolve(array('envs', $env, 'root'), true),
-                        $container->resolve(array('vcs', 'export', 'revfile'), true),
-                        $tmp
-                    );
+                    $revFile = sprintf('%s/%s', rtrim($container->resolve(array('envs', $env, 'root'), true), '/'), $container->resolve(array('vcs', 'export', 'revfile'), true));
+                    $envSsh = $container->resolve(array('envs', $env, 'ssh'), true);
+                    $tmp = tempnam(sys_get_temp_dir(), 'z.rev_');
+                    $cmd = sprintf('scp %s:%s %s || true', $envSsh, $revFile, $tmp);
                     $container->helperExec($cmd);
 
                     $envVcsInfo[$env] = file_get_contents($tmp);
                     unlink($tmp);
                 }
 
-                if (!isset($envVcsInfo[$env])) {
-                    $tmp = tempnam(sys_get_temp_dir(), 'z');
-                    $envVcsInfo[$env] = file_get_contents($tmp);
-                    unlink($tmp);
+                if (!isset($envVcsInfo[$env]) || empty($envVcsInfo[$env])) {
+                    $envVcsInfo[$env] = 'commit 0000000';
                 }
 
                 if ($verbose) {
