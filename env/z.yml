@@ -16,12 +16,12 @@ tasks:
             target_env: ?
             cmd: ? "bash --login"
         do:
-            - @(if envs[target_env] == null) echo "Unable to ssh. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1
-            - @(with tty as INTERACTIVE) ssh -$(tty ? "t")q -p $(envs[target_env].ssh_port) $(envs[target_env].ssh) "cd $(envs[target_env].root); $(cmd)"
+            - '@(if envs[target_env] == null) echo "Unable to ssh. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1'
+            - '@(with tty as INTERACTIVE) ssh -$(tty ? "t")q -p $(envs[target_env].ssh_port) $(envs[target_env].ssh) "cd $(envs[target_env].root); $(cmd)"'
 
     # Connect to the remote mysql shell using ssh
     env.mysql:
-        unless: !ssh.connectable(envs[target_env].ssh)
+        unless: '!ssh.connectable(envs[target_env].ssh)'
 
         help: |
             Connect to the remote MySQL.
@@ -31,8 +31,8 @@ tasks:
         args:
             target_env: ?
         do:
-            - @(if envs[target_env] == null) echo "Unable to mysql. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1
-            - @(with true as INTERACTIVE) ssh -tq -p $(envs[target_env].ssh_port) $(envs[target_env].ssh) "mysql $(envs[target_env].db)"
+            - '@(if envs[target_env] == null) echo "Unable to mysql. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1'
+            - '@(with true as INTERACTIVE) ssh -tq -p $(envs[target_env].ssh_port) $(envs[target_env].ssh) "mysql $(envs[target_env].db)"'
 
     # Initialize the SSH session by copying a local public key to the remote machine
     env.ssh-copy-id:
@@ -45,8 +45,8 @@ tasks:
         args:
             target_env: ?
         do:
-            - @(if envs[target_env] == null) echo "Unable to ssh-copy-id. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1
-            - @(with true as INTERACTIVE) ssh-copy-id -p $(envs[target_env].ssh_port) $(envs[target_env].ssh)
+            - '@(if envs[target_env] == null) echo "Unable to ssh-copy-id. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1'
+            - '@(with true as INTERACTIVE) ssh-copy-id -p $(envs[target_env].ssh_port) $(envs[target_env].ssh)'
 
     # Show the deployed version of the remote machine
     env.version:
@@ -57,7 +57,7 @@ tasks:
         args:
             target_env: ?
         do:
-            - @(if envs[target_env] == null) echo "Unable to check version. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1
+            - '@(if envs[target_env] == null) echo "Unable to check version. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1'
             - echo "$(env.versionat(target_env, VERBOSE))"
 
     env.diff:
@@ -69,7 +69,7 @@ tasks:
             target_env: ?
             version: ? vcs.current
         do:
-            - @(if envs[target_env] == null) echo "Unable to diff. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1
+            - '@(if envs[target_env] == null) echo "Unable to diff. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1'
             - $(vcs.diff(env.versionat(target_env), version, VERBOSE))
 
     env.fdiff:
@@ -84,7 +84,7 @@ tasks:
             prefix: build.dir
 
         do:
-            - @(if envs[target_env] == null) echo "Unable to fdiff. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1
+            - '@(if envs[target_env] == null) echo "Unable to fdiff. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1'
             - ssh -p $(envs[target_env].ssh_port) $(envs[target_env].ssh) "cat $(envs[target_env].root)$(path)" | diff $(prefix)/$(path) - || true
 
     env.get:
@@ -96,7 +96,7 @@ tasks:
             target_env: ?
             file: ?
         do:
-            - @(if envs[target_env] == null) echo "Unable to get. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1
+            - '@(if envs[target_env] == null) echo "Unable to get. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1'
             - scp -P $(envs[target_env].ssh_port) $(recursive ? "-r") $(envs[target_env].ssh):$(envs[target_env].root)$(file) ./$(file)
 
     env.put:
@@ -108,7 +108,7 @@ tasks:
             target_env: ?
             file: ?
         do:
-            - @(if envs[target_env] == null) echo "Unable to put. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1
+            - '@(if envs[target_env] == null) echo "Unable to put. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1'
             - scp -P $(envs[target_env].ssh_port) $(recursive ? "-r") ./$(file) $(envs[target_env].ssh):$(envs[target_env].root)$(file)
 
     env.port-forward:
@@ -121,5 +121,5 @@ tasks:
         opts:
             localhost: '"localhost"'
         do:
-            - @(if envs[target_env] == null) echo "Unable to port-forward. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1
-            - @(with true as INTERACTIVE) ssh -t -L $(remote):$(localhost):$(local) -p $(envs[target_env].ssh_port) $(envs[target_env].ssh)
+            - '@(if envs[target_env] == null) echo "Unable to port-forward. Unknown target_env \"$(target_env)\". Try one of $(join(", ", keys(envs)))" && exit 1'
+            - '@(with true as INTERACTIVE) ssh -t -L $(remote):$(localhost):$(local) -p $(envs[target_env].ssh_port) $(envs[target_env].ssh)'
