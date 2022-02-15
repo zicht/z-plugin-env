@@ -75,14 +75,14 @@ class Plugin extends BasePlugin
         });
         $container->method(
             array('env', 'versionat'),
-            function($container, $env, $verbose = false) {
+            function (Container $container, $env, $verbose = false) {
                 static $envVcsInfo = array();
 
                 if (!isset($envVcsInfo[$env])) {
                     $revFile = sprintf('%s/%s', rtrim($container->resolve(array('envs', $env, 'root'), true), '/'), $container->resolve(array('vcs', 'export', 'revfile'), true));
                     $envSsh = $container->resolve(array('envs', $env, 'ssh'), true);
-                    $tmp = tempnam(sys_get_temp_dir(), 'z.rev_');
-                    $cmd = sprintf('scp %s:%s %s || true', $envSsh, $revFile, $tmp);
+                    $tmp = tempnam(sys_get_temp_dir(), 'z_rev_');
+                    $cmd = sprintf('scp -o ConnectTimeout=7 %s:%s %s || true', $envSsh, $revFile, $tmp);
                     $container->helperExec($cmd);
 
                     $envVcsInfo[$env] = file_get_contents($tmp);
@@ -102,8 +102,14 @@ class Plugin extends BasePlugin
         );
         $container->fn(
             array('ssh', 'connectable'),
-            function($ssh) {
-                return shell_exec(sprintf('ssh -oBatchMode=yes %s "echo 1" 2>/dev/null;', $ssh));
+            function ($ssh, $sshPort = null) {
+                $sshOptions = '-o BatchMode=yes -o ConnectTimeout=1 -o StrictHostKeyChecking=no -Tq';
+                if ($sshPort) {
+                    $sshOptions .= ' -p ' . $sshPort;
+                }
+                $sshOptions .= ' ' . $ssh;
+
+                return shell_exec(sprintf('ssh %s "echo 1" 2>/dev/null;', $sshOptions));
             }
         );
     }
